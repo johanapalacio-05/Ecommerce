@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             console.log('🚀 Enviando petición al servidor...');
             
-            const res = await fetch('http://localhost:8081/api/Recuperar/cambiar-password', {
+            const res = await fetch('https://ecommerce-1-nwlj.onrender.com/api/Recuperar/cambiar-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify({ 

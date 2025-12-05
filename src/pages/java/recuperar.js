@@ -23,7 +23,7 @@ async function enviarCodigo(event) {
     btnEnviar.disabled = true;
 
     try {
-        const res = await fetch('http://localhost:8081/api/Recuperar/solicitar-codigo', {
+        const res = await fetch('https://ecommerce-1-nwlj.onrender.com/api/Recuperar/solicitar-codigo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Gmail: Gmail })

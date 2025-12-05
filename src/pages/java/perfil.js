@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("📡 Consultando perfil al servidor...");
         console.log("📧 Email a enviar:", perfil.Gmail);
         
-        const res = await fetch("http://localhost:8081/api/perfil/obterPerfil", {
+        const res = await fetch("https://ecommerce-1-nwlj.onrender.com/api/perfil/obterPerfil", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email: perfil.Gmail }) // ← CAMBIO: Gmail → email
@@ -208,7 +208,7 @@ document.getElementById("btn-guardar").addEventListener("click", async () => {
     console.log("📤 Enviando actualización:", datosActualizados);
 
     try {
-        const res = await fetch("http://localhost:8081/api/perfil/actualizar", {
+        const res = await fetch("https://ecommerce-1-nwlj.onrender.com/api/perfil/actualizar", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datosActualizados)

@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Página cargada correctamente');
 
-    const API_URL = 'http://localhost:8081/api/Users/register';
+    const API_URL = 'https://ecommerce-1-nwlj.onrender.com/api/Users/register';
 
     document.getElementById('register-form').addEventListener('submit', async function (e) {
         e.preventDefault();

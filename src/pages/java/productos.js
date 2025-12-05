@@ -1,7 +1,7 @@
 //funcion de cargar productos 
 async function cargarProductos() {
     try{
-        const response= await fetch('http://localhost:8081/api/productos');
+        const response= await fetch('https://ecommerce-1-nwlj.onrender.com/api/productos');
         const Productos=await response.json();
 
         const grid= document.getElementById('products-grid');
