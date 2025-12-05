@@ -1,53 +1,71 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log('✅ pagina cargada correcta - sistema listo');
+    console.log('✅ Página cargada correcta - sistema listo');
 
-    //creamos la constante de la Api
+    // ⭐ NUEVO: Verificar si ya hay sesión al cargar login
+    const sesionActiva = localStorage.getItem("sesionActiva");
+    const usuario = localStorage.getItem("usuario");
+    
+    console.log('🔍 Verificando sesión existente:');
+    console.log('- sesionActiva:', sesionActiva);
+    console.log('- usuario:', usuario);
+    
+    if (sesionActiva === "true" && usuario) {
+        console.log('⚠️ Ya hay sesión activa, redirigiendo a productos...');
+        window.location.href = 'productos(1).html';
+        return;
+    }
+
     const API_URL = "http://localhost:8081/api/login";
 
-    //enviar los datos del formulario
-    document.getElementById('login-form').addEventListener ('submit', async function (e){
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        //preparamos los elementos de la pagina 
         const btn = document.getElementById("login-btn");
         const errordiv = document.getElementById("login-error");
         const errorMsg = document.getElementById("login-error-message");
 
         errordiv.classList.add('hidden'); 
 
-        //recoger los campos del formulario 
-        const datos={
+        const datos = {
             Gmail: document.getElementById('Gmail').value.trim(),
             Password: document.getElementById('Password').value
         };
 
-        //validamos que los campos no esten vacios
-        if(!datos.Gmail || !datos.Password){
-            errorMsg.textContent="por favor complete los datos requeridos";
+        if (!datos.Gmail || !datos.Password) {
+            errorMsg.textContent = "Por favor complete los datos requeridos";
             errordiv.classList.remove('hidden');
             return;
         }
 
-        //cambia el boton mientras procesa
-        btn.disabled=true;
-        btn.textContent="Iniciando sesion...";
+        btn.disabled = true;
+        btn.textContent = "Iniciando sesión...";
 
-        // enviamos los datos al servidor
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+
         try {
-            const response = await fetch(API_URL,{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(datos)
+            console.log('📤 Enviando credenciales al servidor...');
+            
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos),
+                signal: controller.signal
             });
-            // recibir respuesta del servidor 
+
+            clearTimeout(timeout);
+
+            console.log('📥 Respuesta recibida:', response.status);
+            
             const resultado = await response.json();
+            console.log('📦 Datos del servidor:', resultado);
 
-            if (response.ok){
-                console.log('✅ 201- inicio de sesion exitoso');
+            if (response.ok) {
+                console.log('✅ 200 - Inicio de sesión exitoso');
 
-                // guardar informacion 
+                // Guardar información 
                 localStorage.setItem("sesionActiva", "true");
-                localStorage.setItem("usuario",JSON.stringify({
+                localStorage.setItem("usuario", JSON.stringify({
                     id: resultado.usuario.id,
                     Nombre: resultado.usuario.Nombre,
                     Apellido: resultado.usuario.Apellido,
@@ -55,35 +73,43 @@ document.addEventListener("DOMContentLoaded", function() {
                     Telefono: resultado.usuario.Telefono
                 }));
 
-                // mensaje de exito
-                errordiv.className='bg-green-100 border-green-200  text-green-800 px-4 py-3 rounded-lg';
-                errorMsg.textContent="inicio de sesion exitoso, redireccionando...";
+                console.log('💾 Datos guardados en localStorage:');
+                console.log('- sesionActiva:', localStorage.getItem("sesionActiva"));
+                console.log('- usuario:', localStorage.getItem("usuario"));
+
+                // Mensaje de éxito
+                errordiv.className = 'bg-green-100 border-green-200 text-green-800 px-4 py-3 rounded-lg';
+                errorMsg.textContent = "Inicio de sesión exitoso, redireccionando...";
                 errordiv.classList.remove('hidden');
 
-                // redirigir a productos
-                setTimeout(()=>window.location.href='productos(1).html',2000); 
+                // Redirigir a productos
+                console.log('⏳ Esperando 2 segundos antes de redirigir...');
+                setTimeout(() => {
+                    console.log('🔄 Redirigiendo a productos(1).html...');
+                    window.location.href = 'productos(1).html';
+                }, 2000); 
 
-                // credenciales incorrectas
             } else {
-                errordiv.textContent=resultado.message || 'credenciales incorrectas';
+                console.log('❌ Error en login:', resultado.message);
+                errorMsg.textContent = resultado.message || 'Credenciales incorrectas';
                 errordiv.classList.remove('hidden');
-                btn.disabled=false;
-                btn.innerHTML='iniciar sesion';
+                btn.disabled = false;
+                btn.textContent = 'Iniciar sesión';
             }
 
-            // si no hay conexion al servidor
         } catch (error) {
             clearTimeout(timeout);
+            console.error('❌ Error en la petición:', error);
 
-            if (error.name==='abortError'){
-                errorMsg.textContent='tiempo de espera agotado. intente nuevamente';
-            } else{
-                errorMsg.textContent='error de conexion con el servidor';
+            if (error.name === 'AbortError') {
+                errorMsg.textContent = 'Tiempo de espera agotado. Intente nuevamente';
+            } else {
+                errorMsg.textContent = 'Error de conexión con el servidor';
             }
 
             errordiv.classList.remove('hidden');
-            btn.disabled=false;
-            btn.textContent='iniciar sesion';
+            btn.disabled = false;
+            btn.textContent = 'Iniciar sesión';
         }
     });
 });
