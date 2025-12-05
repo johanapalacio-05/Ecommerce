@@ -5,7 +5,10 @@ const UsersShema =new mongoose.Schema({
     Apellido:{type:String,required:true},
     Gmail:{type:String,required:true},
     Edad:{type:Number,required:true}, 
-    Password:{type:String,required:true}
+    Password:{type:String,required:true},
+
+    codigoRecuperacion: {type: String},
+    codigoExpiracion: {type: Date}
 });
 
 

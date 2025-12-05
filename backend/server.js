@@ -6,6 +6,7 @@ import UsersRoutes from "./routes/User.js"
 import {loginUser} from "./controllers/login.js";
 import PerfilRouter from "./routes/perfil.js";
 import recuperarpassword from './routes/recuperacion.js'
+import pedidosRoutes from './routes/pedidos.js';
 
 
 
@@ -27,6 +28,7 @@ app.use("/api/Users", UsersRoutes);
 app.use("/api/login",loginUser);
 app.use("/api/perfil", PerfilRouter);
 app.use("/api/Recuperar", recuperarpassword);
+app.use("/api/pedidos",pedidosRoutes );
 
 
 

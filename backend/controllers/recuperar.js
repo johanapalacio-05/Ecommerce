@@ -41,6 +41,7 @@ export const solicitarCodigo = async (req, res) => {
         usuario.codigoRecuperacion = codigo;
         usuario.codigoExpiracion = Date.now() + 900000;
         await usuario.save();
+        console.log("Guardado en BD:", usuario.codigoRecuperacion);
     
 
 
@@ -130,7 +131,7 @@ export const cambiarPassword = async(req, res) =>{
         }
         // Buscar usuario
         const usuario = await Users.findOne({ 
-            Correo_Electronico,
+            Gmail,
             codigoRecuperacion: codigo,
             codigoExpiracion: { $gt: Date.now() }
         });
@@ -145,7 +146,7 @@ export const cambiarPassword = async(req, res) =>{
                 const hashedPassword = await bcrypt.hash(nuevaPassword, salt);
 
                 //actualizar contraseña y limpiar codigo
-                usuario.passwords = hashedPassword;
+                usuario.Password = hashedPassword;
                 usuario.codigoRecuperacion = undefined;
                 usuario.codigoExpiracion = undefined;
                 await usuario.save();
